@@ -86,6 +86,7 @@ Lets deploy something, for this I'm using a pre-existing image that is essential
 - Now copy the helloworld directory in this repository to the repository we attached to Argo above
 - Modify deployment.yaml so that the image refers to your ACR location
 - Now run `argocd app create helloworld --repo git@github.com:youruser/yourrepo.git --path helloworld --dest-server https://kubernetes.default.svc --dest-namespace default` (make sure you're logged in)
+- *Please note that the application name must be lowercase*
 - The git repo link is the same as the one we attached previously, it'll be the clone link you can see in github
 - The path is the github directory where the yaml files are for this app.
 - This create command will create in manual sync mode (I think) which means no changes will be applied until you sync it directly, we can create with *--sync-policy auto* there will be an update command too, or go update it in the UI, you can also Add the app via the UI and follow the instructions
