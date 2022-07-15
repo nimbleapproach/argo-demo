@@ -97,6 +97,9 @@ Lets deploy something, for this I'm using a pre-existing image that is essential
 
 Note this is one of many, many ways to deploy via Argo (helm charts etc.) that aren't explored here!
 
+### Add github webhook for Argo
+Argo does not do this itself, if you want Argo to know an app is out of sync and to sync automatically, then we will need to configure a webhook on the repository feeding Argo. The instructions to do so are here: https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/
+
 ## Links
 - [AKS Quickstart](https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli)
 - [ACR Quickstart](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli)
