@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: hw-prod
+resources:
+- ../../base
+patchesJson6902:
+  - target:
+      version: v1
+      kind: Service
+      name: helloworld
+      namespace: hw-prod
+    patch: |-
+      - op: replace
+        path: /metadata/annotations/service.beta.kubernetes.io~1azure-dns-label-name
+        value: nimblepaultesthelloworldprod
+  - target:
+      version: v1
+      kind: Deployment
+      name: helloworld
+      namespace: hw-prod
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env/0/value
+        value: "Outer Space"   
+images:
+- name: paulsregistry80.azurecr.io/node-test
+  newTag: 0.0.14

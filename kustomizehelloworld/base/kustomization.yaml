@@ -1,0 +1,4 @@
+namespace: helloworld
+resources:
+- service.yaml
+- deployment.yaml

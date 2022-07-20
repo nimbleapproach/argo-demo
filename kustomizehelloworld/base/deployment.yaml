@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  namespace: helloworld
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: helloworld
+  template:
+    metadata:
+      labels:
+        app: helloworld
+    spec:
+      containers:
+      - name: helloworld-http
+        image: paulsregistry80.azurecr.io/node-test:0.0.14-SNAPSHOT
+        env:
+        - name: "LOCATION"
+          value: "The moon"
+        ports:
+        - containerPort: 3000
