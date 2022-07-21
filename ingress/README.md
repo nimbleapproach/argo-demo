@@ -50,5 +50,6 @@ and change it to:
         - command:
             - argocd-server
             - --rootpath=/argo`
+            
 3. Apply the change `kubectl apply -f argocd-server-deploy.yaml --namespace argocd`
 4. After a few seconds our Argo link *should* work
