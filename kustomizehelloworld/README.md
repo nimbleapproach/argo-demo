@@ -12,6 +12,8 @@ In this example we have 2 patches:
 1. Inline patch: Targets the deployment definition and replaces the dns label annotation with a new one for prod
 2. File patch: Targets the service definition and replaces an environment variable value with a different value
 
+Note file patch is probably preferred as when it comes to arrays and inline changes, you have to reference by index e.g. *path: /spec/template/spec/containers/0/env/0/value* 
+
 This example also contains an image override for the `paulsregistry80.azurecr.io/node-test` image, it will use the image tag as defined in *newTag*
 
 ## Kustomize + Argo
