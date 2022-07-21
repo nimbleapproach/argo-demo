@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloworld
+  namespace: helloworld
+spec:
+  template:
+    spec:
+      containers:
+        - name: helloworld-http
+          env:
+            - name: "LOCATION"
+              value: "Outer Space"

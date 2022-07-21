@@ -13,15 +13,8 @@ patchesJson6902:
       - op: replace
         path: /metadata/annotations/service.beta.kubernetes.io~1azure-dns-label-name
         value: nimblepaultesthelloworldprod
-  - target:
-      version: v1
-      kind: Deployment
-      name: helloworld
-      namespace: hw-prod
-    patch: |-
-      - op: replace
-        path: /spec/template/spec/containers/0/env/0/value
-        value: "Outer Space"   
+patches:
+- ./patch-deployment.yaml
 images:
 - name: paulsregistry80.azurecr.io/node-test
   newTag: 0.0.14
