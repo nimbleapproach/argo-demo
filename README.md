@@ -71,6 +71,8 @@ Adds Argo as a kubernetes controller to our cluster:
 - Login on the command line with `argocd login [IP]` (eventually likely to have some internally accessible host name) user name is *admin*
 - Or login at https://[IP] for the UI
 
+***NOTE: It is likely we may want to to deploy Argo to a separate cluster or location to the cluster it is managing, imagine screwing your ingress rules torpedoing your access to everything, and having to fix things manually (I managed it!)*** If this is how we proceed then pay attention to Optional step 5 in the Argo guide.
+
 ### Attach repository to Argo
 Argo needs to access service definition files that will be stored within a repository, this may be more easily done with the UI itself, especially if it is a private repository that you want to connect to with ssh, to do this:
 - run `ssh-keygen` (do not save the generated files away from the default location if you have ssh set up personally)
