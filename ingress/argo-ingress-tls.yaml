@@ -23,5 +23,5 @@ spec:
               name: https
   tls:
     - hosts:
-      - nimblepaultestingress.uksouth.cloudapp.azure.com
+      - ci.nimbleapproach.com
       secretName: argocd-secret
