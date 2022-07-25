@@ -60,7 +60,7 @@ and change it to:
 3. Apply the change `kubectl apply -f argocd-server-deploy.yaml --namespace argocd`
 4. After a few seconds our Argo link *should* work
 
-***However, doing it this way does seem to have extra that I do not fully understand at time of writing, if I add a host restriction to the rule it does not appear to route to Argo, I generally have to create the rule with the host entry to generate the certificate and then remove it to actually route it. So this may be best avoided***
+***However, doing it this way does seem to have extra issues that I do not fully understand at time of writing. If I add a host restriction to the rule it does not appear to route to Argo, I generally have to create the rule with the host entry to generate the certificate and then remove it to actually route it. So this may be best avoided***
 
 ### Certificates
 If you wish to try using certificates you will need to add a cert manager and a certificate issuer, which you can do by doing the following:
