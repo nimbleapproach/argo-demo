@@ -14,7 +14,7 @@ In this example we have 2 patches:
 
 Note file patch is probably preferred as when it comes to arrays and inline changes, you have to reference by index e.g. *path: /spec/template/spec/containers/0/env/0/value* 
 
-This example also contains an image override for the `paulsregistry80.azurecr.io/node-test` image, it will use the image tag as defined in *newTag*
+This example also contains an image override for the `paulsregistry80.azurecr.io/node-drone-test` image, it will use the image tag as defined in *newTag*
 
 ## Kustomize + Argo
 On adding a new deployment within the Argo UI, when you select the directory to deploy from, if a kustomize file is present Argo will auto detect that it is a kustomize deployment. The UI will show you any extra kustomize section where you can extra options such as suffixes and/or prefixes for the deployment, you can even alter the image to deploy from here too.
