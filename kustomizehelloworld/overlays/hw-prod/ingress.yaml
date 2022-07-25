@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld
+  namespace: helloworld
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hw-prod.paulpbrandon.uk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: helloworldprod
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - hw-prod.paulpbrandon.uk
+      secretName: hw-prod-tls-secret
