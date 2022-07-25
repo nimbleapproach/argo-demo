@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: helloworld-http
-        image: paulsregistry80.azurecr.io/node-drone-test:0.0.0
+        image: paulsregistry80.azurecr.io/node-drone-test:0.0.1
         env:
         - name: "LOCATION"
           value: "The moon"
