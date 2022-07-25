@@ -58,3 +58,17 @@ and change it to:
             
 3. Apply the change `kubectl apply -f argocd-server-deploy.yaml --namespace argocd`
 4. After a few seconds our Argo link *should* work
+
+### Certificates
+If you wish to try using certificates you will need to add a cert manager and a certificate issuer, which you can do by doing the following:
+- `helm repo add jetstack https://charts.jetstack.io`
+- `helm repo update`
+- Add custom resource definitions (CRDs) check for latest version`kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.crds.yaml`
+- `helm install \                                                                                               
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.8.2`
+- `kubectl create -f cert-manager-staging.yaml` (File provided in this directory, change the e-mail accordingly)
+- `kubectl create -f cert-manager-production.yaml` (File provided in this directory, change the e-mail accordingly)
+- **Note staging creates untrusted certificates to use for testing purposes, there are rate limits in place for production**
