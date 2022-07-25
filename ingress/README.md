@@ -41,9 +41,10 @@ nginx controller is configured and deployed via helm
 Controllers, also apparently, by default, can find Ingress entries on other namespaces, so we simply add an ingress definition in the argocd namespace
 - The ingress definition is found in the argo-ingress.yaml file in this directory
 - Add the definition with `kubectl apply -f argo-ingress.yaml --namespace argocd`
-- Alternatively you can use argo-ingress-tls.yaml which will add a certificate and allow the SSL webhooks to work properly from GitHub (i.e. Without disabling the SSL check) ***There is an issue here I do not fully understand at time of writing, if I add a host restriction to the rule it does not appear to route to Argo, I generally have to create the rule with the host entry to generate the certificate and then remove it to actually route it. This appears to be Argo or passthrough specific it does not happen with the helloworld app.***
-- That in most cases would be it, we should be able to access argo at *https://ci.nimbleapproach.com/argo*, however, we see a 404
-- This is because we have altered Argo's root path and Argo must be configured for that, to do that (*if you do not change the root this does not apply*):
+- Alternatively you can use argo-ingress-tls.yaml which will add a certificate and allow the SSL webhooks to work properly from GitHub (i.e. Without disabling the SSL check) 
+- That in most cases would be it, we should be able to access argo at *https://ci.nimbleapproach.com*
+
+If however you had changed the rootPath i.e. so that you would access the Argo homepage on *https://ci.nimbleapproach.com/argo* for example then you would get a 404 error. Because we have altered Argo's root path, Argo must be configured accordingly, to do that:
 1. Get the argo server deployment `kubectl get deploy argocd-server -n argocd  -o yaml > argocd-server-deploy.yaml`
 2. Edit *argocd-server-deploy.yaml*, find the part that looks like:
 
@@ -58,6 +59,8 @@ and change it to:
             
 3. Apply the change `kubectl apply -f argocd-server-deploy.yaml --namespace argocd`
 4. After a few seconds our Argo link *should* work
+
+***However, doing it this way does seem to have extra that I do not fully understand at time of writing, if I add a host restriction to the rule it does not appear to route to Argo, I generally have to create the rule with the host entry to generate the certificate and then remove it to actually route it. So this may be best avoided***
 
 ### Certificates
 If you wish to try using certificates you will need to add a cert manager and a certificate issuer, which you can do by doing the following:
