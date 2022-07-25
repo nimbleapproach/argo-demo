@@ -30,7 +30,7 @@ nginx controller is configured and deployed via helm
   --namespace ingress-ctl \
   --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
   --set controller.nodeSelector."kubernetes\.io/os"=linux \
-  --set controller.extraArgs.enable-ssl-passthrough=""
+  --set controller.extraArgs.enable-ssl-passthrough="" \
   --set controller.service.loadBalancerIP=$STATIC_IP`
 - Controller will be created in the *ingress-ctl* namespace
 - This will give us the host *https://ci.nimbleapproach.com* as the address of the controller, navigating there should give us an nginx 404 page
