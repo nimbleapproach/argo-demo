@@ -25,4 +25,6 @@ So if everything was deployed successful we should find:
 - A version on *https://hw-dev.paulpbrandon.uk* with a message from *The moon*
 - A version on *https://hw-prod.paulpbrandon.uk* with a message from *Planet Bong*
 
+## Ingress controller
+This example presumes the use of an Ingress Controller, though Ingress will do nothing if it isn't present. See https://github.com/nimbleapproach/argo-demo/blob/main/ingress/README.md for more info
 *TODO Example of defining a kustomize app via the argo CLI* 
