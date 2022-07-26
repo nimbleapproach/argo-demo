@@ -41,7 +41,7 @@ nginx controller is configured and deployed via helm
 Controllers, also apparently, by default, can find Ingress entries on other namespaces, so we simply add an ingress definition in the argocd namespace
 - The ingress definition is found in the argo-ingress.yaml file in this directory
 - Add the definition with `kubectl apply -f argo-ingress.yaml --namespace argocd`
-- Alternatively you can use argo-ingress-tls.yaml which will add a certificate and allow the SSL webhooks to work properly from GitHub (i.e. Without disabling the SSL check) 
+- Alternatively you can use argo-ingress-tls.yaml which will add a certificate and allow the SSL webhooks to work properly from GitHub (i.e. Without disabling the SSL check) N.B. You'll need to do the steps in the Certificate section below before trying this.
 - That in most cases would be it, we should be able to access argo at *https://ci.nimbleapproach.com*
 
 If however you had changed the rootPath i.e. so that you would access the Argo homepage on *https://ci.nimbleapproach.com/argo* for example then you would get a 404 error. Because we have altered Argo's root path, Argo must be configured accordingly, to do that:
