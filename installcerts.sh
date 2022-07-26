@@ -1,6 +1,8 @@
 #!/bin/sh
 
-/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10 << "EOF"
+# you may or may not need to change the location of Python on line 5 to the one the CLI is using.
+# This script is a copy of one from the official Python installer
+python3 << "EOF"
 
 # install_certifi.py
 #

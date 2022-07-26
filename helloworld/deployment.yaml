@@ -14,7 +14,7 @@ spec:
         app: helloworld
     spec:
       containers:
-      - image: paulsregistry80.azurecr.io/helloworld-http:v1
+      - image: marcosdiez/helloworld-http:v1
         name: helloworld-http
         ports:
         - containerPort: 80

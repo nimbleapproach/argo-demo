@@ -1,3 +1,4 @@
+[back](../README.md)
 # Ingress Controllers
 An ingress controller is essentially a proxy that can route calls to various services within our cluster without having to expose them all individually i.e. we only have to create one external IP address, one host etc.
 
@@ -5,8 +6,8 @@ In this example we will add an nginx Ingress Controller and configure ingress fo
 N.B. There are a couple of Argo specific things, but this can largely be applied to other applications
 
 ## Pre-requisites
-- Azure CLI is installed
-- Successfully configured kubectl to connect to Azure
+A successfully configured kubectl. 
+See [here](../docs/installK8s.md)
 
 ## Guide
 
@@ -75,3 +76,4 @@ If you wish to try using certificates you will need to add a cert manager and a 
 - `kubectl create -f cert-manager-staging.yaml` (File provided in this directory, change the e-mail accordingly)
 - `kubectl create -f cert-manager-production.yaml` (File provided in this directory, change the e-mail accordingly)
 - **Note staging creates untrusted certificates to use for testing purposes, there are rate limits in place for production**
+  [back](../README.md)
