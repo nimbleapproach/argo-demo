@@ -9,8 +9,10 @@ Here we will use GitHub as our SSO provider, permissions will be governed by wha
 - Select *Developer Settings* from the bottom of the menu on the left.
 - Select *OAuth Apps* on the right and hit the *New OAuth App* button
 - Fill out the form as follows, replace the host name as necessary:
+
   ![add repo](./img/createOAuth.png)
 - You will see something like this:
+
   ![add repo](./img/createdOAuthApp.png)
 - Take note of the client id
 - Click the *Generate a new client secret* button, and note done the value you get back (you won't be able to get it later)
