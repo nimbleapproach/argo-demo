@@ -11,7 +11,7 @@ Here we will use GitHub as our SSO provider, permissions will be governed by wha
 - Fill out the form as follows, replace the host name as necessary:
 
   ![add repo](./img/createOAuth.png)
-- You will see something like this:
+- You will then see something like this when you register the app:
 
   ![add repo](./img/createdOAuthApp.png)
 - Take note of the client id
@@ -78,5 +78,6 @@ time="2022-07-27T08:26:34Z" level=info msg="login successful: connector \"github
 ```
 - If it says successful here, and it doesn't let you in you can try looking at the network traffic in the browser, I've seen an issuer mismatch here, which lead me to restarting services.
 - If it does log in you should see something like this in User Info:
+
   ![add repo](./img/argoUser.png)
 - To test out access you can try adding a label to an app, if you are in the admin group (stacks team in this case) then it will save, if not it will report you don't have permission.
