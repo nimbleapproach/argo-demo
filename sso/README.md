@@ -15,7 +15,7 @@ Here we will use GitHub as our SSO provider, permissions will be governed by wha
 
   ![add repo](./img/createdOAuthApp.png)
 - Take note of the client id
-- Click the *Generate a new client secret* button, and note done the value you get back (you won't be able to get it later)
+- Click the *Generate a new client secret* button, and note down the value you get back (you won't be able to get it later)
 
 ### 2) Update Argo ConfigMaps
 In order to enable SSO in Argo we need to update some config, namespace *argocd* is assumed, and kubectl is configured to connect to the relevant AKS cluster
