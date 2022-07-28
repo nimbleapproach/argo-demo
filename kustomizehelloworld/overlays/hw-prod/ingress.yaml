@@ -15,7 +15,7 @@ spec:
               service:
                 name: oauth2-proxy
                 port: 
-                  number: 4180
+                  number: 80
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
