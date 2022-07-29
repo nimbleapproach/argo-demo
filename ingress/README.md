@@ -75,3 +75,19 @@ If you wish to try using certificates you will need to add a cert manager and a 
 - `kubectl create -f cert-manager-staging.yaml` (File provided in this directory, change the e-mail accordingly)
 - `kubectl create -f cert-manager-production.yaml` (File provided in this directory, change the e-mail accordingly)
 - **Note staging creates untrusted certificates to use for testing purposes, there are rate limits in place for production**
+
+### Other Apps
+Ingress for other apps is controlled in the exact same way, we just provide an Ingress resource and the controller should be able to route to it. There are examples in the kustomizehelloworld app.
+
+## Azure Gateway Ingress Controller (AGIC)
+Azure does have an inbuilt ingress controller that I'll briefly touch on here, it depends on if we want a cloud specific controller or not, the main points are below:
+- Requires you to create an Application Gateway to allow access to the AKS cluster
+- The AKS cluster can then be completely private, i.e. It has no public IPs
+- Within Portal in your AKS Cluster's *Networking* settings, there is an option *Enable ingress controller*, tick this and select a gateway
+- It appears that a lot of setup happens automatically at this point (via Portal), the 2 virtual networks get peered together, even though the [guide](https://docs.microsoft.com/en-us/azure/application-gateway/tutorial-ingress-controller-add-on-existing) has that as a manual step
+- Note that your networking type also has an effect (note this can't be changed after creating a cluster)
+1. Azure CNI - If it's this type everything should work
+2. Kubenet - If it's this then you'll need to associate the route table in the AKS VNet with the Application Gateway VNet
+- Define an Ingress as we have done for nginx, except the ingressClass is now *azure/application-gateway*, routes in the gateway should be automatically updated
+
+*TODO does this work with oauth2-proxy or can it even do it itself*
