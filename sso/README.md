@@ -1,8 +1,10 @@
 # Single Sign On
-Argo can be configured to use Single Sign On and be integrated with various providers. This means you don't have to create any new users in Argo itself and users' access is defined via their membership of various groups defined by the provider.
+Argo has an inbuilt ability to use Single Sign On (SSO) and be integrated with various providers. This means you don't have to create any new users in Argo itself and users' access is defined via their membership of various groups defined by the provider.
 
-## GitHub
-Here we will use GitHub as our SSO provider, permissions will be governed by what team(s) your GitHub user belongs to within an Organization. This is best set up on the organization account, but you can try it on a user account as long as you can get someone to allow it access to your Organization.
+We can also give our apps the ability to use SSO without that ability being part of the application itself, we can configure the Ingress for that application to route via an OAuth2 proxy and link into Azure AD.
+
+## Argo + GitHub
+Here we will use GitHub as our SSO provider for Argo. As Argo is part of our deployment pipeline it makes sense to link to GitHub accounts rather than say Azure or Google. Permissions will be governed by what team(s) your GitHub user belongs to within an Organization. This is best set up on the organization account, but you can try it on a user account as long as you can get someone to allow it access to your Organization.
 
 ### 1) Create GitHub OAuth Application
 - In GitHub go to your account settings (from menu top right)
@@ -81,3 +83,83 @@ time="2022-07-27T08:26:34Z" level=info msg="login successful: connector \"github
 
   ![add repo](./img/argoUser.png)
 - To test out access you can try adding a label to an app, if you are in the admin group (stacks team in this case) then it will save, if not it will report you don't have permission.
+
+## Helloworld + OAuth2 Proxy + Azure AD
+Here we will attempt to add Authorization to our Helloworld application (specifically for the prod environment, which will use our existing Nimble AD as the provider.
+
+### Configure OAuth Application in Azure
+First we will need to register an application in Azure to handle the OAuth request.
+- In Portal go to *Azure Active Directory* and select *App registration* from the *Manage* section in the menu on the left
+- Select the *New Registration* button, you'll want to fill out the resulting form as follows (replace URLs as necessary):
+  
+  ![add repo](./img/appReg.png)
+- Note: If handling multiple apps we can add extra redirect URLs later
+- You should see the following, note down the client and tenant IDs (blue boxes) select the *Add a certificate or secret* link (red box)
+
+  ![add repo](./img/appRegCreated.png)
+- Add a new secret and note down the string that appears in the *Value* column, you will not be able to retrieve it later.
+- Select *Token Configuration* from the menu on the left
+- We are going to restrict access by what security group the user belongs to, we will need to return this information in the token
+- Select *Add groups claim* click the *Security Groups* check box and save.
+- I have added other optional claims in the course of trying to get things to work, some of these *may* not be required, but groups definitely is
+
+  ![add repo](./img/tokenConfiguration.png)
+- It is a similar story under *API Permissions* User.Read will be included by default, I've ended up with email and openid too at this point, to add just click on *Microsoft Graph (3)* and add them in the box that comes up on the right
+
+  ![add repo](./img/apiPermissions.png)
+
+- Under *Authentication* from the left menu we can add extra redirect URLs, set the logout URL if known, assumed to be *https://hw-prod.paulpbrandon.uk/oauth2/logout* (no idea if it works) and request different token types, I've added *Access* but may work anyway via SAML
+
+### Install oauth2-proxy
+Next we'll need to install oauth2-proxy into our cluster, this assumes you have Helm and kubectl set up
+- `helm repo add oauth2-proxy https://oauth2-proxy.github.io/manifests`
+- `helm repo update`
+- `openssl rand -base64 32 | head -c 32 | base64` To generate a cookie secret, note this down
+- Run the following command, leave out metrics.enabled if you want them. The client id is the application id from the app registration, client_secret the value we noted earlier, and cookie_secret we just created
+```text
+helm install oauth2-proxy oauth2-proxy/oauth2-proxy \      
+--set=metrics.enabled=false \
+--set=config.clientID={client_id} \
+--set=config.clientSecret={client_secret} \
+--set=config.cookieSecret={cookie_secret}
+```
+- Note above command will add oauth2-proxy to the default namespace.
+- I believe there is a way to do the following by putting them in the helm command somewhere, but hadn't quite got it figured, so
+- Now we'll modify the deployment, so pull down the relevant file:
+- `kubectl get deployment oauth2-proxy -o yaml > oauth.yaml`
+- Edit the *args* section to the following:
+```yaml
+- args:
+  - --provider=oidc
+  - --email-domain=*
+  - --upstream=file:///dev/null
+  - --http-address=0.0.0.0:4180
+  - --oidc-issuer-url=https://login.microsoftonline.com/{tenant_id}/v2.0
+  - --oidc-email-claim=preferred_username
+  - --scope=openid email profile
+  - --allowed-group=f6bc2d3e-3b7f-4aec-98b4-117a677fa5b6
+```
+- `kubectl apply -f oauth.yaml` to apply back
+- Notes about this command:
+1. Replace {tenant_id} with the tenant id we noted earlier
+2. In the current version of oauth2-proxy (7.3.x) the Azure provider doesn't work correctly, and you have to use oidc
+3. If you do not set *oidc-email-claim as above you will just get the user object id as the e-mail, which has implications if you want to specify an e-mail domain
+4. If you do not add the scope as above, and you add an allowed group it will result in an error
+5. allowed-group can be specified multiple times, I think it can take a list too to allow multiple groups
+6. The allowed group is the object id of the group in Azure AD, anyone not in these groups will not be permitted access
+7. It is possible to use *--oidc-groups-claim=roles* to use application roles instead as groups and filter on those instead
+8. On upshot of restricting groups here is that apps requiring access from different groups would have to use different proxies
+
+### Update ingress for the helloworld app
+In this directory you should find 2 files:
+1. [ingress-oauth.yaml](./ingress-oauth.yaml)
+2. [oauth2-external.yaml](./oauth2-external.yaml)
+
+- The ingress file the ingress definition to go through oauth for the kustomizehelloworld application for the prod environment
+- Because this app is in a different namespace we set up an external link in external file.
+- Make sure you kustomize.yaml includes these resources and sync in Argo
+- Note in the Argo set up, if you set a prefix or suffix option in the Kustomize settings you will need to take this into account ***all*** names will be modified according to these, ***except*** the service name links!
+
+Assuming all has gone well, and you've and your user is part of the is part of the group we've allowed, then navigating to the app URL will give us the Microsoft login dialogue
+Once logged in hopefully it shows you the page
+If not check the oauth2-proxy logs and/or the ingress controller logs

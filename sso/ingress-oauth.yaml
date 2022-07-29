@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld-oauth
+  namespace: helloworld
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hw-prod.paulpbrandon.uk
+      http:
+        paths:
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: helloworld
+  namespace: helloworld
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.default.svc.cluster.local/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hw-prod.paulpbrandon.uk
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: helloworldprod
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - hw-prod.paulpbrandon.uk
+      secretName: hw-prod-tls-secret
