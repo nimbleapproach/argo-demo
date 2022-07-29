@@ -4,6 +4,7 @@ namespace: hw-prod
 resources:
 - ../../base
 - ./ingress.yaml
+- ./oauth2-proxy-external.yaml
 patchesJson6902:
   - target:
       version: v1
