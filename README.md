@@ -175,9 +175,12 @@ export MY_ACRPUSH_PWD=$(az ad sp create-for-rbac --name "${MY_APP_PRINCIPAL:?}" 
 export MY_ACRPUSH_USR=$(az ad sp list --display-name "${MY_APP_PRINCIPAL:?}" --query "[].appId" --output tsv)
 ```
 
-=======
->>>>>>> 8c1192f (instrcutions)
+
 ## Links
 - [AKS Quickstart](https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli)
 - [ACR Quickstart](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli)
 - [Argo Getting Started](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+
+--
+# Issues:
+ * 'service.beta.kubernetes.io/azure-dns-label-name: mydroneapp' doesn't seem to be honored
