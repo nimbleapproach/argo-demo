@@ -148,7 +148,6 @@ See [here](./docs/installDrone.md) to set up the OAuth app in github.
 
 Then run [installDrone.sh](installDrone.sh) with the github oauth client ID and secret.
 
-<<<<<<< HEAD
 ### 9) Connect our example app
 
 Let's recall the name from our container registry from earlier.

@@ -36,7 +36,7 @@ nginx controller is configured and deployed via helm
 - Controller will be created in the *ingress-ctl* namespace
 - This will give us the host *https://ci.nimbleapproach.com* as the address of the controller, navigating there should give us an nginx 404 page
 - *enable-ssl-passthrough* is required for Argo
-- Controller must also must not run on Windows (apparently)
+- Controller must also not run on Windows (apparently)
 
 ### Add ingress for Argo
 Controllers, also apparently, by default, can find Ingress entries on other namespaces, so we simply add an ingress definition in the argocd namespace
