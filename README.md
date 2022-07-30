@@ -148,11 +148,12 @@ See [here](./docs/installDrone.md) to set up the OAuth app in github.
 
 Then run [installDrone.sh](installDrone.sh) with the github oauth client ID and secret.
 
+<<<<<<< HEAD
 ### 9) Connect our example app
 
 Let's recall the name from our container registry from earlier.
 
-e.g., on Azure, our [initVars.sh variables](initVars.sh) would be defined as:
+e.g., on Azure, our [args.sh variables](args.sh) would be defined as:
 ```
 export MY_CLUSTER_NAME=... 
 export MY_GROUP_NAME=...
@@ -174,6 +175,8 @@ export MY_ACRPUSH_PWD=$(az ad sp create-for-rbac --name "${MY_APP_PRINCIPAL:?}" 
 export MY_ACRPUSH_USR=$(az ad sp list --display-name "${MY_APP_PRINCIPAL:?}" --query "[].appId" --output tsv)
 ```
 
+=======
+>>>>>>> 8c1192f (instrcutions)
 ## Links
 - [AKS Quickstart](https://docs.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli)
 - [ACR Quickstart](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli)

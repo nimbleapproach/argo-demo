@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-source initVars.sh
 source args.sh $@
 
 

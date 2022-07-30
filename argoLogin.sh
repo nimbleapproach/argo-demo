@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # get our global env vars
-source initVars.sh
+source args.sh $@
 
 #
 # If k8s is just spinning up this can fail, so we use a retry-loop

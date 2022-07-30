@@ -29,7 +29,7 @@ begins_with_short_option()
 }
 
 # THE DEFAULTS INITIALIZATION - OPTIONALS
-_arg_namespace=
+_arg_namespace=${MY_APP_NAME}
 _arg_clustersize="3"
 _arg_location="uksouth"
 
