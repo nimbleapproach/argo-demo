@@ -32,7 +32,8 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
   --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
   --set controller.nodeSelector."kubernetes\.io/os"=linux \
   --set controller.extraArgs.enable-ssl-passthrough="" \
-  --set controller.service.loadBalancerIP=$STATIC_IP```
+  --set controller.service.loadBalancerIP=$STATIC_IP
+```
 - Controller will be created in the *ingress-ctl* namespace
 - This will give us the host *https://ci.nimbleapproach.com* as the address of the controller, navigating there should give us an nginx 404 page
 - *enable-ssl-passthrough* is required for Argo
