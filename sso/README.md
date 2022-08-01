@@ -108,7 +108,7 @@ First we will need to register an application in Azure to handle the OAuth reque
 
   ![add repo](./img/apiPermissions.png)
 
-- Under *Authentication* from the left menu we can add extra redirect URLs, set the logout URL if known, assumed to be *https://hw-prod.paulpbrandon.uk/oauth2/logout* (no idea if it works) and request different token types, I've added *Access* but may work anyway via SAML
+- Under *Authentication* from the left menu we can add extra redirect URLs, set the logout URL if known, assumed to be *https://hw-prod.paulpbrandon.uk/oauth2/sign_out* and request different token types, I've added *Access* but may work anyway via SAML
 
 ### Install oauth2-proxy
 Next we'll need to install oauth2-proxy into our cluster, this assumes you have Helm and kubectl set up
