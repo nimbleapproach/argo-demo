@@ -18,4 +18,4 @@ patches:
 - ./patch-deployment.yaml
 images:
 - name: paulsregistry80.azurecr.io/node-drone-test
-  newTag: 0.0.1
+  newTag: 0.0.2
