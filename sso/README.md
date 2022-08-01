@@ -144,12 +144,14 @@ helm install oauth2-proxy oauth2-proxy/oauth2-proxy \
 - Notes about this command:
 1. Replace {tenant_id} with the tenant id we noted earlier
 2. In the current version of oauth2-proxy (7.3.x) the Azure provider doesn't work correctly, and you have to use oidc
-3. If you do not set *oidc-email-claim as above you will just get the user object id as the e-mail, which has implications if you want to specify an e-mail domain
+3. If you do not set *oidc-email-claim* as above you will just get the user object id as the e-mail, which has implications if you want to specify an e-mail domain
 4. If you do not add the scope as above, and you add an allowed group it will result in an error
 5. allowed-group can be specified multiple times, I think it can take a list too to allow multiple groups
 6. The allowed group is the object id of the group in Azure AD, anyone not in these groups will not be permitted access
 7. It is possible to use *--oidc-groups-claim=roles* to use application roles instead as groups and filter on those instead
-8. An upshot of restricting groups here is that apps requiring access from different groups would have to use different proxies
+8. An upshot of restricting groups here is that apps requiring access from different groups would have to use different proxies, it may be you put in a proxy per namespace and not cross namespaces, this example had been setup as a general purpose proxy
+
+**Note:** If using the nginx ingress controller you will need to add ***proxy-buffer-size: 8k*** in the data section of the ingress-nginx-controller ConfigMap
 
 ### Update ingress for the helloworld app
 In this directory you should find 2 files:
