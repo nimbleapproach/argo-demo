@@ -87,7 +87,7 @@ time="2022-07-27T08:26:34Z" level=info msg="login successful: connector \"github
 ## Helloworld + OAuth2 Proxy + Azure AD
 Here we will attempt to add Authorization to our Helloworld application (specifically for the prod environment, which will use our existing Nimble AD as the provider.
 
-### Configure OAuth Application in Azure
+### 1) Configure OAuth Application in Azure
 First we will need to register an application in Azure to handle the OAuth request.
 - In Portal go to *Azure Active Directory* and select *App registration* from the *Manage* section in the menu on the left
 - Select the *New Registration* button, you'll want to fill out the resulting form as follows (replace URLs as necessary):
@@ -110,7 +110,7 @@ First we will need to register an application in Azure to handle the OAuth reque
 
 - Under *Authentication* from the left menu we can add extra redirect URLs, set the logout URL if known, assumed to be *https://hw-prod.paulpbrandon.uk/oauth2/sign_out* and request different token types, I've added *Access* but may work anyway via SAML
 
-### Install oauth2-proxy
+### 2) Install oauth2-proxy
 Next we'll need to install oauth2-proxy into our cluster, this assumes you have Helm and kubectl set up
 - `helm repo add oauth2-proxy https://oauth2-proxy.github.io/manifests`
 - `helm repo update`
@@ -153,7 +153,7 @@ helm install oauth2-proxy oauth2-proxy/oauth2-proxy \
 
 **Note:** If using the nginx ingress controller you will need to add ***proxy-buffer-size: 8k*** in the data section of the ingress-nginx-controller ConfigMap
 
-### Update ingress for the helloworld app
+### 3) Update ingress for the helloworld app
 In this directory you should find 2 files:
 1. [ingress-oauth.yaml](./ingress-oauth.yaml)
 2. [oauth2-external.yaml](./oauth2-external.yaml)
@@ -166,4 +166,64 @@ In this directory you should find 2 files:
 
 Assuming all has gone well, and you've and your user is part of the is part of the group we've allowed, then navigating to the app URL will give us the Microsoft login dialogue
 Once logged in hopefully it shows you the page
-If not check the oauth2-proxy logs and/or the ingress controller logs
+If not check the oauth2-proxy logs and/or the ingress controller logs.
+
+## OAuth2 Proxy Machine Login
+Asking for a user is all well and good, but what if we want another app to access our OAuth2 protected application? What we need to do in this situation is to obtain a token, and then make a request to our protected app sending a bearer token.
+
+These instructions will cover using a Service Principle to retrieve a token, we will use the same application registration that we created above (it is what defines the service principle) 
+
+### 1) Modify the OAuth2 Proxy
+In order to allow the OAuth2 Proxy to process bearer tokens we will need to add extra arguments to the *args* list that we modified in the *Install oauth2-proxy* step above, we will also add some extra arguments to allow passing of the token to the backend application:
+```yaml
+- --set-authorization-header=true
+- --set-xauthrequest=true
+- --pass-authorization-header=true
+- --pass-access-token=true
+- --skip-jwt-bearer-tokens=true
+- --extra-jwt-issuers=https://login.microsoftonline.com/{tenant_id}/v2.0={client_id}
+```
+
+This configuration should also allow a human login
+
+### 2) Modify the ingress (Optional)
+If we are using the nginx Ingress controller, and you want to forward the token to the backend you need to add the following annotations to the ingress for the app:
+```yaml
+nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+nginx.ingress.kubernetes.io/configuration-snippet: |
+  auth_request_set $token $upstream_http_x_auth_request_access_token;
+  add_header 'Authorization' $token;
+```
+Note, these annotations are included in the [ingress-oauth.yaml](./ingress-oauth.yaml) file
+
+Additionally, nginx must have been compiled with the *--with-http_auth_request_module* flag, this should have been included if installed via the *ingress-nginx* helm chart
+
+### 3) Request a token
+Obviously we would want the app that requires access to make this request, but as we're testing it, we'll make this request via postman, make the request as follows:
+
+![add repo](./img/tokenRequestPostman.png)
+
+- Note the user may need to be added to the *Users and Groups* for this app registration beforehand. 
+- (Portal -> Azure Active Directory -> Enterprise Applications -> {our app name} -> Users and Groups)
+- If we've configured any allowed groups in OAuth2 proxy, then this user must also be part of that group
+- Assuming the request is successful you'll get a response something like this:
+```json
+{
+    "token_type": "Bearer",
+    "scope": "openid profile email 00000003-0000-0000-c000-000000000000/Mail.Read 00000003-0000-0000-c000-000000000000/User.Read",
+    "expires_in": 3772,
+    "ext_expires_in": 3772,
+    "access_token": "your_access_token",
+    "id_token": "your_id_token"
+}
+```
+- You will want to copy the *id_token* value
+- Note, these are Json Web Tokens (JWT) you can inspect their content at https://jwt.io/
+
+### 4) Use the token
+Make a request to the app with a bearer token, the value is the id_token value that we copied, so here we'll make a request to the helloworld app we created previously (with oauth2 ingress rules)
+
+![add repo](./img/bearerRequest.png)
+
+- If you're authorised, then you'll see the page content, otherwise you will be presented with the Sign-In page
+- If we forwarded the token, then it should be present in the *Authorization* header sent to the backend app

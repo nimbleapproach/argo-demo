@@ -27,6 +27,10 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-staging
     nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.default.svc.cluster.local/oauth2/auth"
     nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: Authorization
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      auth_request_set $token $upstream_http_x_auth_request_access_token;
+      add_header 'Authorization' $token;
 spec:
   ingressClassName: nginx
   rules:
