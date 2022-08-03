@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth2-demo
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: oauth2-demo
+  template:
+    metadata:
+      labels:
+        app: oauth2-demo
+    spec:
+      containers:
+      - image: paulsregistry80.azurecr.io/oauth2-demo:0.0.1
+        name: oauth2-demo-http
+        ports:
+        - containerPort: 3000
+        env:
+        - name: "ENDPOINT"
+          value: "https://hw-prod.paulpbrandon.uk"
+        - name: "TENANT_ID"
+          valueFrom:
+            secretKeyRef:
+              name: oauth2-demo-secrets
+              key: tenant_id
+        - name: "TOKEN_CLIENT_ID"
+          valueFrom:
+            secretKeyRef:
+              name: oauth2-demo-secrets
+              key: client_id
+        - name: "TOKEN_SECRET"
+          valueFrom:
+            secretKeyRef:
+              name: oauth2-demo-secrets
+              key: client_secret
+        - name: "TOKEN_USER"
+          valueFrom:
+            secretKeyRef:
+              name: oauth2-demo-secrets
+              key: username
+        - name: "TOKEN_PASS"
+          valueFrom:
+            secretKeyRef:
+              name: oauth2-demo-secrets
+              key: password
