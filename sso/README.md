@@ -227,3 +227,6 @@ Make a request to the app with a bearer token, the value is the id_token value t
 
 - If you're authorised, then you'll see the page content, otherwise you will be presented with the Sign-In page
 - If we forwarded the token, then it should be present in the *Authorization* header sent to the backend app
+
+### 5) Example Application
+You can see this in coded form in: https://github.com/nimbleapproach/oauth2-demo with the deployment defined here: https://github.com/nimbleapproach/argo-demo/tree/main/oauth2-demo
