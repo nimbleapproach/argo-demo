@@ -17,5 +17,5 @@ patchesJson6902:
 patches:
 - ./patch-deployment.yaml
 images:
-- name: paulsregistry80.azurecr.io/node-drone-test
-  newTag: 0.0.2
+- name: paulbnimbleregistry.azurecr.io/node-drone-test
+  newTag: 0.0.3
