@@ -46,5 +46,5 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - hw-prod.paulpbrandon.uk
+      - hw-prod.paulpbrandon.uk
       secretName: hw-prod-tls-secret
