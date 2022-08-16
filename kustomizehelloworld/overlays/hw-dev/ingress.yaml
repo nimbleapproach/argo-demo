@@ -16,7 +16,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: helloworlddev
+                name: helloworld
                 port:
                   number: 80
   tls:
