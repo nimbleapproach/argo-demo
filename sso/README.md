@@ -161,8 +161,6 @@ In this directory you should find 2 files:
 - The ingress file the ingress definition to go through oauth for the kustomizehelloworld application for the prod environment
 - Because this app is in a different namespace we set up an external link in external file.
 - Make sure you kustomize.yaml includes these resources and sync in Argo
-- Note in the Argo set up, if you set a prefix or suffix option in the Kustomize settings you will need to take this into account ***all*** names will be modified according to these, ***except*** the service name links!
-- In fact the external definition does not need to be tied to a specific app and maybe should be treated separately
 
 Assuming all has gone well, and you've and your user is part of the is part of the group we've allowed, then navigating to the app URL will give us the Microsoft login dialogue
 Once logged in hopefully it shows you the page
